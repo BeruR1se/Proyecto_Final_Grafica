@@ -276,31 +276,23 @@ int main()
 		Interior.Draw(lightingShader);
 
 		model = glm::mat4(1);
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));//Se cambia la escala del modelo
+		
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Cuadro1.Draw(lightingShader);
 
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-5.0f, 0.0f, 0.0f)); //Se hace una traslacion del modelo
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));//Se cambia la escala del modelo
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Cuadro2.Draw(lightingShader);
 
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f)); //Se hace una traslacion del modelo
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));//Se cambia la escala del modelo
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Pieza1.Draw(lightingShader);
 
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(5.0f, 0.0f, 4.0f)); //Se hace una traslacion del modelo
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));//Se cambia la escala del modelo
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Pieza2.Draw(lightingShader);
 
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 4.0f)); //Se hace una traslacion del modelo
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));//Se cambia la escala del modelo
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Pieza3.Draw(lightingShader);
 
