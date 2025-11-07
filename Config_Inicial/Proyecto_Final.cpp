@@ -196,6 +196,44 @@ int main()
 	Model pieza16((char*)"Models/estatuanueva13.obj");
 	Model pieza17((char*)"Models/estatuanueva14.obj");
 
+	//carga de luminarias 
+	Model luminaria1((char*)"Models/luminaria1.obj");
+	Model luminaria2((char*)"Models/luminaria2.obj");
+	Model luminaria3((char*)"Models/luminaria3.obj");
+	Model luminaria4((char*)"Models/luminaria4.obj");
+	Model luminaria5((char*)"Models/luminaria5.obj");
+	Model luminaria6((char*)"Models/luminaria6.obj");
+	Model luminaria7((char*)"Models/luminaria7.obj");
+	Model luminaria8((char*)"Models/luminaria8.obj");
+	Model luminaria9((char*)"Models/luminaria9.obj");
+	Model luminaria10((char*)"Models/luminaria10.obj");
+	Model luminaria11((char*)"Models/luminaria11.obj");
+	Model luminaria12((char*)"Models/luminaria12.obj");
+	Model luminaria13((char*)"Models/luminaria13.obj");
+	Model luminaria14((char*)"Models/luminaria14.obj");
+	Model luminaria15((char*)"Models/luminaria15.obj");
+	Model luminaria16((char*)"Models/luminaria16.obj");
+	Model luminaria17((char*)"Models/luminaria17.obj");
+	Model luminaria18((char*)"Models/luminaria18.obj");
+
+	//carga de bancas
+
+	Model banca1((char*)"Models/banca1.obj");
+	Model banca2((char*)"Models/banca2.obj");
+	Model banca3((char*)"Models/banca3.obj");
+	Model banca4((char*)"Models/banca4.obj");
+	Model banca5((char*)"Models/banca5.obj");
+	Model banca6((char*)"Models/banca6.obj");
+	Model banca7((char*)"Models/banca7.obj");
+	Model banca8((char*)"Models/banca8.obj");
+	Model banca9((char*)"Models/banca9.obj");
+	Model banca10((char*)"Models/banca10.obj");
+	Model banca11((char*)"Models/banca11.obj");
+
+	
+
+
+
 
 	// First, set the container's VAO (and VBO)
 	GLuint VBO, VAO;
@@ -472,6 +510,127 @@ int main()
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		pieza17.Draw(lightingShader);
+
+		//=====================LUMINARIAS=============================
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria1.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria2.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria3.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria4.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria5.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria6.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria7.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria8.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria9.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria10.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria11.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria12.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria13.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria14.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria15.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria16.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria17.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		luminaria18.Draw(lightingShader);
+
+
+		//========================BANCAS=========================
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		banca1.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		banca2.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		banca3.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		banca4.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		banca5.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		banca6.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		banca7.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		banca8.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		banca9.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		banca10.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		banca11.Draw(lightingShader);
 
 
 		// Also draw the lamp object, again binding the appropriate shader
