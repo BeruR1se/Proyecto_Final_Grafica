@@ -230,6 +230,9 @@ int main()
 	Model banca10((char*)"Models/banca10.obj");
 	Model banca11((char*)"Models/banca11.obj");
 
+	//recepcion
+	Model recepcion((char*)"Models/recepcion.obj");
+	Model recepcionista((char*)"Models/recepcionista.obj");
 	
 
 
@@ -632,7 +635,15 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		banca11.Draw(lightingShader);
 
+		//======================RECEPCION===============================
 
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		recepcion.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		recepcionista.Draw(lightingShader);
 		// Also draw the lamp object, again binding the appropriate shader
 		lampShader.Use();
 		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
