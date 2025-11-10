@@ -346,6 +346,38 @@ int main()
     Model recepcion((char*)"Models/recepcion.obj");
     Model recepcionista((char*)"Models/recepcionista.obj");
 
+
+
+    //==========================EXTERIOR=======================
+    Model jardin((char*)"Models/jardin.obj");
+    Model arboles1((char*)"Models/arboles1.obj");
+    Model arboles2((char*)"Models/arboles2.obj");
+    Model arboles3((char*)"Models/arboles3.obj");
+    Model arboles4((char*)"Models/arboles4.obj");
+    Model arboles5((char*)"Models/arboles5.obj");
+    Model arboles6((char*)"Models/arboles6.obj");
+    Model arboles7((char*)"Models/arboles7.obj");
+    Model asientomadera((char*)"Models/asientomadera.obj");
+    Model botes((char*)"Models/botes.obj");
+    Model cafeteria((char*)"Models/cafeteria.obj");
+    Model cuadruples((char*)"Models/cuadruples.obj");
+    Model curvas1((char*)"Models/curvas1.obj");
+    Model curvas2((char*)"Models/curvas2.obj");
+    Model juegos((char*)"Models/juegos.obj");
+    Model macetones((char*)"Models/macetones.obj");
+    Model malla1((char*)"Models/malla1.obj");
+    Model malla2((char*)"Models/malla2.obj");
+    Model palapas((char*)"Models/palapas.obj");
+    Model piramide((char*)"Models/piramide.obj");
+    Model sendero1((char*)"Models/sendero1.obj");
+    Model sendero2((char*)"Models/sendero2.obj");
+    Model sendero3((char*)"Models/sendero3.obj");
+    Model sendero4((char*)"Models/sendero4.obj");
+    Model sendero5((char*)"Models/sendero5.obj");
+    Model subeybaja((char*)"Models/subeybaja.obj");
+    
+
+
     // ===== CARGA DE SPOTS DESDE BLENDER =====
     std::vector<SpotInfo> blenderSpots = LoadSpotLightsFromFBX("Models/spotlights.fbx");
 
@@ -579,7 +611,34 @@ int main()
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); recepcion.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); recepcionista.Draw(lightingShader);
 
+        //========================== EXTERIOR ===========================================
 
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); jardin.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); arboles1.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); arboles2.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); arboles3.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); arboles4.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); arboles5.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); arboles6.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); arboles7.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); asientomadera.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); botes.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); cafeteria.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); cuadruples.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); curvas1.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); curvas2.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); juegos.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); macetones.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); malla1.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); malla2.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); palapas.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); piramide.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); sendero1.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); sendero2.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); sendero3.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); sendero4.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); sendero5.Draw(lightingShader);
+        model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); subeybaja.Draw(lightingShader);
         // lamp shader para ver la point light
         lampShader.Use();
         GLint modelLocL = glGetUniformLocation(lampShader.Program, "model");
