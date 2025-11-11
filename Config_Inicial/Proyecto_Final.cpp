@@ -50,6 +50,10 @@ GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
 bool firstMouse = true;
 
+//  desintegración
+bool explode = false;
+float explodeStart = 0.0f;
+
 // Light attributes
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
@@ -271,6 +275,8 @@ int main()
 
     Shader lightingShader("Shader/lighting.vs", "Shader/lighting.frag");
     Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
+    // shader de desintegración:
+    Shader disintegrateShader("Shader/disintegrate.vs", "Shader/disintegrate.frag");
 
     // ====== tus modelos ======
     Model Interior((char*)"Models/museocompleto.obj");
@@ -279,6 +285,10 @@ int main()
     Model Pieza1((char*)"Models/Abstract_Harmony_1102171507_texture.obj");
     Model Pieza2((char*)"Models/Elegance_in_Red_1102171459_texture.obj");
     Model Pieza3((char*)"Models/Elegance_in_Stone_1102171426_texture.obj");
+
+    // modelo a desintegrar
+    Model desintegrado((char*)"Models/desintegrado.obj");
+
     // cuadros
     Model cuadro3((char*)"Models/cuadronuevo1.obj");
     Model cuadro4((char*)"Models/cuadronuevo2.obj");
@@ -346,8 +356,6 @@ int main()
     Model recepcion((char*)"Models/recepcion.obj");
     Model recepcionista((char*)"Models/recepcionista.obj");
 
-
-
     //==========================EXTERIOR=======================
     Model jardin((char*)"Models/jardin.obj");
     Model arboles1((char*)"Models/arboles1.obj");
@@ -375,8 +383,6 @@ int main()
     Model sendero4((char*)"Models/sendero4.obj");
     Model sendero5((char*)"Models/sendero5.obj");
     Model subeybaja((char*)"Models/subeybaja.obj");
-    
-
 
     // ===== CARGA DE SPOTS DESDE BLENDER =====
     std::vector<SpotInfo> blenderSpots = LoadSpotLightsFromFBX("Models/spotlights.fbx");
@@ -412,6 +418,13 @@ int main()
         GLfloat currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        // tiempo desde que explotó
+        float explodeTime = 0.0f;
+        if (explode) {
+            explodeTime = currentFrame - explodeStart;
+         
+        }
 
         glfwPollEvents();
         DoMovement();
@@ -525,22 +538,45 @@ int main()
 
         glm::mat4 model = glm::mat4(1.0f);
 
-        
-       
-      
-
         // INTERIOR
         model = glm::mat4(1);
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         Interior.Draw(lightingShader);
 
-        // CUADROS
+        // CUADROS principales
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); Cuadro1.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); Cuadro2.Draw(lightingShader);
+
+        //dibujo del modelo que explota
+        disintegrateShader.Use();
+        GLint dModelLoc = glGetUniformLocation(disintegrateShader.Program, "model");
+        GLint dViewLoc = glGetUniformLocation(disintegrateShader.Program, "view");
+        GLint dProjLoc = glGetUniformLocation(disintegrateShader.Program, "projection");
+        GLint dTimeLoc = glGetUniformLocation(disintegrateShader.Program, "u_time");
+        GLint dExplodeLoc = glGetUniformLocation(disintegrateShader.Program, "u_explode");
+        GLint dStrLoc = glGetUniformLocation(disintegrateShader.Program, "u_strength");
+        GLint dViewPosLoc = glGetUniformLocation(disintegrateShader.Program, "viewPos");
+
+        glUniformMatrix4fv(dViewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(dProjLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniform1f(dTimeLoc, explode ? explodeTime : 0.0f);
+        glUniform1f(dExplodeLoc, explode ? 1.0f : 0.0f);
+        glUniform1f(dStrLoc, 2.0f);
+        glUniform3fv(dViewPosLoc, 1, glm::value_ptr(camera.GetPosition()));
+
+        glm::mat4 modelDis = glm::mat4(1.0f);
+        glUniformMatrix4fv(dModelLoc, 1, GL_FALSE, glm::value_ptr(modelDis));
+        desintegrado.Draw(disintegrateShader);
+
+   
+        lightingShader.Use();
+
+        // PIEZAS
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); Pieza1.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); Pieza2.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); Pieza3.Draw(lightingShader);
 
+        // CUADROS extra (todos los que ya tenías)
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); cuadro3.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); cuadro4.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); cuadro5.Draw(lightingShader);
@@ -612,7 +648,6 @@ int main()
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); recepcionista.Draw(lightingShader);
 
         //========================== EXTERIOR ===========================================
-
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); jardin.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); arboles1.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); arboles2.Draw(lightingShader);
@@ -639,6 +674,7 @@ int main()
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); sendero4.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); sendero5.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); subeybaja.Draw(lightingShader);
+
         // lamp shader para ver la point light
         lampShader.Use();
         GLint modelLocL = glGetUniformLocation(lampShader.Program, "model");
@@ -698,7 +734,15 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
     if (key >= 0 && key < 1024)
     {
         if (action == GLFW_PRESS)
+        {
             keys[key] = true;
+
+            // tecla para desintegrar
+            if (key == GLFW_KEY_X) {
+                explode = true;
+                explodeStart = glfwGetTime();
+            }
+        }
         else if (action == GLFW_RELEASE)
             keys[key] = false;
     }

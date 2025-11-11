@@ -44,6 +44,12 @@
     <None Include="Shader\lighting.vs">
       <Filter>Archivos de origen\Shader</Filter>
     </None>
+    <None Include="Shader\disintegrate.frag">
+      <Filter>Archivos de origen\Shader</Filter>
+    </None>
+    <None Include="Shader\disintegrate.vs">
+      <Filter>Archivos de origen\Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Proyecto_Final.cpp">
