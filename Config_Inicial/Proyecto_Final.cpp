@@ -54,6 +54,20 @@ bool firstMouse = true;
 bool explode = false;
 float explodeStart = 0.0f;
 
+// animacion complumpio
+float amplitudColumpio = 5.5f;   // grados máximos a cada lado
+float frecuenciaColumpio = 2.0f;  // velocidad de oscilación
+bool AnimColumpio = true;         // control de animación
+float rotBall = 0.0f; //Angulo de rotacion
+float direccion = 1.0f;
+float maxRot = 2.0f;
+float radio = 1.0f;        // Radio del círculo
+float amplitud = 0.5f;     // Amplitud del movimiento senoidal
+float frecuencia = 2.0f;   // Frecuencia del movimiento senoidal
+float velocidad = 0.01f;
+bool AnimBall = false;
+float angulo = 0.0f;
+
 // Light attributes
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
@@ -465,6 +479,11 @@ int main()
     Model Pieza2((char*)"Models/Elegance_in_Red_1102171459_texture.obj");
     Model Pieza3((char*)"Models/Elegance_in_Stone_1102171426_texture.obj");
 
+    // MODELO COLUMPIO
+    Model parte1((char*)"Models/parte1.obj");
+    Model lado1((char*)"Models/lado1.obj");
+    Model lado2((char*)"Models/lado2.obj");
+
     // modelo a desintegrar
     Model desintegrado((char*)"Models/desintegrado.obj");
 
@@ -607,6 +626,12 @@ int main()
         GLfloat currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        //animacioncolumpio
+        float anguloColumpio = 0.0f;
+        if (AnimColumpio) {
+            anguloColumpio = amplitudColumpio * sin(currentFrame * frecuenciaColumpio);
+        }
 
         // tiempo desde que explotó
         float explodeTime = 0.0f;
@@ -905,6 +930,33 @@ int main()
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); sendero5.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); subeybaja.Draw(lightingShader);
 
+        // DIBUJAR EL COLUMPIO
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-101.9f, -7.5f, -189.511f)); // 
+        model = glm::scale(model, glm::vec3(2.0f));
+        //model = glm::translate(model, glm::vec3(0.0f, -0.0005f, 0.0f));
+        model = glm::rotate(model, glm::radians(anguloColumpio), glm::vec3(0.0f, 1.0f, 0.0f));
+        //model = glm::translate(model, glm::vec3(0.0f, 0.0005f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        parte1.Draw(lightingShader);
+
+
+        // === LADO 1 ===
+        glm::mat4 modelLado = glm::mat4(1.0f);
+        modelLado = glm::translate(modelLado, glm::vec3(-95.0f, -7.5f, -185.25f));
+        modelLado = glm::scale(modelLado, glm::vec3(2.0f));
+        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelLado));
+        lado1.Draw(lightingShader);
+
+        // === LADO 2 ===
+        modelLado = glm::mat4(1.0f);
+        modelLado = glm::translate(modelLado, glm::vec3(-94.0f, -7.5f, -185.65f));
+        modelLado = glm::scale(modelLado, glm::vec3(2.0f));
+        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelLado));
+        lado2.Draw(lightingShader);
+        glBindVertexArray(0);
+
+
         // lamp shader para ver la point light
         lampShader.Use();
         GLint modelLocL = glGetUniformLocation(lampShader.Program, "model");
@@ -954,6 +1006,33 @@ void DoMovement()
         pointLightPositions[0].z -= 0.1f;
     if (keys[GLFW_KEY_J])
         pointLightPositions[0].z += 0.01f;
+}
+
+void Animation() {
+    GLfloat currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+    if (AnimBall) {
+
+
+        if (AnimBall) {
+            float anguloColumpio = amplitudColumpio * sin(currentFrame * frecuenciaColumpio);
+            rotBall += 0.001f * direccion; // Incrementa o decrementa rotBall según la dirección
+
+            // Cambiar la dirección si se alcanza el límite
+            if (rotBall >= maxRot) {
+                direccion = -1; // Cambia a bajando
+            }
+            else if (rotBall <= 0.0f) {
+                direccion = 1; // Cambia a subiendo
+            }
+        }
+        else {
+            rotBall = 0.0f; // Reinicia el valor si la animación no está activa
+            direccion = 1;  // Reinicia la dirección a subiendo
+        }
+
+    }
 }
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
