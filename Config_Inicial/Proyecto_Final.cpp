@@ -1,6 +1,6 @@
-//Proyecto Final
+﻿//Proyecto Final
 //Equipo: 3
-//N�meros de Cuenta:319306972, 319039627, 314639136
+//Números de Cuenta:319306972, 319039627, 314639136
 //fecha de entrega: 12/11/2025
 
 #include <iostream>
@@ -50,7 +50,7 @@ GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
 bool firstMouse = true;
 
-//  desintegraci�n
+//  desintegración
 bool explode = false;
 float explodeStart = 0.0f;
 
@@ -109,6 +109,185 @@ float vertices[] = {
        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 };
+
+//Anim 
+float rotPer = 0.0f;
+int PerAnim = 0;
+float head = 0.0f;
+float giroBrazoIzq = 0.0f;
+float giroBraIzqY = 0.0f;
+float giroBrazoDer = 0.0f;
+float giroBraDerY = 0.0f;
+float giroPiernaIzq = 0.0f;
+float giroPiernaDer = 0.0f;
+float giroCabeza = 0.0f;
+float rotY;
+float posX = 10.0f, posY = -2.0f, posZ = 0.0f;
+float incX = 0.0f, incY = 0.0f, incZ = 0.0f;
+float incBrazoIzq = 0.0f, incBrazoDer = 0.0f;
+float incPiernaIzq = 0.0f, incPiernaDer = 0.0f;
+float incCabeza = 0.0f;
+float incrotY;
+const int numKeyFrames = 32;
+
+typedef struct _frame {
+    //Posición general del personaje 
+    float posX, posY, posZ, rotY;
+    // Rotaciones de las partes principales 
+    float giroBrazoIzq, giroBrazoDer;
+    float giroPiernaIzq, giroPiernaDer;
+    float giroCabeza;
+}FRAME;
+
+#define MAX_FRAMES 100 
+int i_max_steps = 100;
+int i_curr_steps = 0;
+FRAME KeyFrame[MAX_FRAMES];
+int FrameIndex = 0;
+bool play = false;
+int playIndex = 0;
+double lastTime = 0.0f;
+
+void saveFrame(void) {
+    KeyFrame[FrameIndex].posX = posX;
+    KeyFrame[FrameIndex].posY = posY;
+    KeyFrame[FrameIndex].posZ = posZ;
+    KeyFrame[FrameIndex].rotY = rotY;
+    KeyFrame[FrameIndex].giroBrazoIzq = giroBrazoIzq;
+    KeyFrame[FrameIndex].giroBrazoDer = giroBrazoDer;
+    KeyFrame[FrameIndex].giroPiernaIzq = giroPiernaIzq;
+    KeyFrame[FrameIndex].giroPiernaDer = giroPiernaDer;
+    KeyFrame[FrameIndex].giroCabeza = giroCabeza;
+    FrameIndex++;
+}
+
+void resetElements(void)
+{
+    posX = KeyFrame[0].posX;
+    posY = KeyFrame[0].posY;
+    posZ = KeyFrame[0].posZ;
+    rotY = KeyFrame[0].rotY;
+}
+
+void Interpolacion()
+{
+    if (i_curr_steps >= i_max_steps)
+    {
+        playIndex++;
+        if (playIndex >= FrameIndex - 1)
+        {
+            playIndex = 0; // vuelve al primer frame (loop) 
+        }
+        // Calcula incrementos entre keyframes consecutivos 
+        incX = (KeyFrame[playIndex + 1].posX - KeyFrame[playIndex].posX) / i_max_steps;
+        incY = (KeyFrame[playIndex + 1].posY - KeyFrame[playIndex].posY) / i_max_steps;
+        incZ = (KeyFrame[playIndex + 1].posZ - KeyFrame[playIndex].posZ) / i_max_steps;
+        incBrazoIzq = (KeyFrame[playIndex + 1].giroBrazoIzq - KeyFrame[playIndex].giroBrazoIzq) / i_max_steps;
+        incBrazoDer = (KeyFrame[playIndex + 1].giroBrazoDer - KeyFrame[playIndex].giroBrazoDer) / i_max_steps;
+        incPiernaIzq = (KeyFrame[playIndex + 1].giroPiernaIzq - KeyFrame[playIndex].giroPiernaIzq) / i_max_steps;
+        incPiernaDer = (KeyFrame[playIndex + 1].giroPiernaDer - KeyFrame[playIndex].giroPiernaDer) / i_max_steps;
+        incrotY = (KeyFrame[playIndex + 1].rotY - KeyFrame[playIndex].rotY) / i_max_steps;
+        //Reinicia pasos 
+        i_curr_steps = 0;
+    }
+    else
+    {
+        // Aplica incrementos a las variables actuales 
+        posX += incX;
+        posY += incY;
+        posZ += incZ;
+        rotY += incrotY;
+        giroBrazoIzq += incBrazoIzq;
+        giroBrazoDer += incBrazoDer;
+        giroPiernaIzq += incPiernaIzq;
+        giroPiernaDer += incPiernaDer;
+        giroBrazoIzq = glm::clamp(giroBrazoIzq, -30.0f, 30.0f);
+        giroBrazoDer = glm::clamp(giroBrazoDer, -30.0f, 30.0f);
+        giroPiernaIzq = glm::clamp(giroPiernaIzq, -30.0f, 30.0f);
+        giroPiernaDer = glm::clamp(giroPiernaDer, -30.0f, 30.0f);
+        i_curr_steps++;
+    }
+}
+
+void inicializaKeyFrames()
+{
+    // === ANIMACIÓN: Caminata realista con giro (brazos hacia arriba) === 
+    // Frame 0: posición inicial (en reposo) 
+    KeyFrame[0].posX = 0;
+    KeyFrame[0].posY = 0;
+    KeyFrame[0].posZ = 0;
+    KeyFrame[0].rotY = 0;
+    KeyFrame[0].giroPiernaIzq = 0;
+    KeyFrame[0].giroPiernaDer = 0;
+    KeyFrame[0].giroBrazoIzq = 0;
+    KeyFrame[0].giroBrazoDer = 0;
+
+    // --- Caminata hacia adelante --- 
+    for (int i = 1; i <= 12; i++)
+    {
+        KeyFrame[i].posZ = i; // avanza en Z 
+        KeyFrame[i].posX = 0;
+        KeyFrame[i].rotY = 0;
+        if (i % 2 == 0) { // paso derecho 
+            KeyFrame[i].giroPiernaIzq = 35;
+            KeyFrame[i].giroPiernaDer = -35;
+            // 🔼 Brazos se levantan (movimiento vertical, eje X) 
+            KeyFrame[i].giroBrazoIzq = -10; // sube 
+            KeyFrame[i].giroBrazoDer = 10; // baja 
+        }
+        else { // paso izquierdo 
+            KeyFrame[i].giroPiernaIzq = -35;
+            KeyFrame[i].giroPiernaDer = 35;
+
+            KeyFrame[i].giroBrazoIzq = 10; // baja 
+            KeyFrame[i].giroBrazoDer = -10; // sube 
+        }
+    }
+    // --- Transición: se detiene y comienza a girar --- 
+    KeyFrame[13].posZ = 12.5;
+    KeyFrame[13].rotY = 15;
+    KeyFrame[13].giroPiernaIzq = 10;
+    KeyFrame[13].giroPiernaDer = -10;
+    KeyFrame[13].giroBrazoIzq = -10;
+    KeyFrame[13].giroBrazoDer = 10;
+
+    KeyFrame[14].posZ = 12.5;
+    KeyFrame[14].rotY = 45;
+    KeyFrame[14].giroPiernaIzq = 5;
+    KeyFrame[14].giroPiernaDer = -5;
+    KeyFrame[14].giroBrazoIzq = -5;
+    KeyFrame[14].giroBrazoDer = 5;
+
+    KeyFrame[15].posZ = 12.5;
+    KeyFrame[15].rotY = 90;
+    KeyFrame[15].giroPiernaIzq = 0;
+    KeyFrame[15].giroPiernaDer = 0;
+    KeyFrame[15].giroBrazoIzq = 0;
+    KeyFrame[15].giroBrazoDer = 0;
+
+    // --- Caminata hacia la derecha (ahora en X) --- 
+    for (int i = 16; i <= 30; i++)
+    {
+        KeyFrame[i].posZ = 12.5;
+        KeyFrame[i].posX = (i - 15) * 1.0f; // avanza en X 
+        KeyFrame[i].rotY = 90;
+
+        if (i % 2 == 0) { // paso derecho 
+            KeyFrame[i].giroPiernaIzq = 35;
+            KeyFrame[i].giroPiernaDer = -35;
+            KeyFrame[i].giroBrazoIzq = -10;
+            KeyFrame[i].giroBrazoDer = 10;
+        }
+        else { // paso izquierdo 
+            KeyFrame[i].giroPiernaIzq = -35;
+            KeyFrame[i].giroPiernaDer = 35;
+            KeyFrame[i].giroBrazoIzq = 10;
+            KeyFrame[i].giroBrazoDer = -10;
+        }
+    }
+    //Total de frames 
+    FrameIndex = 50;
+}
 
 // delta time
 GLfloat deltaTime = 0.0f;
@@ -200,10 +379,10 @@ std::vector<SpotInfo> LoadSpotLightsFromFBX(const std::string& path)
 
             glm::mat4 global = AiToGlm(globalAi);
 
-            // posici�n: columna 3
+            // posición: columna 3
             glm::vec3 pos = glm::vec3(global[3]);
 
-            // direcci�n: eje Z invertido
+            // dirección: eje Z invertido
             glm::vec3 zAxis = glm::vec3(global[2]);
             glm::vec3 dir = -glm::normalize(zAxis);
 
@@ -211,7 +390,7 @@ std::vector<SpotInfo> LoadSpotLightsFromFBX(const std::string& path)
             s.position = pos;
             s.direction = dir;
 
-            // �ngulos desde blender (radianes)
+            // ángulos desde blender (radianes)
             s.innerCutoffDeg = glm::degrees(light->mAngleInnerCone);
             s.outerCutoffDeg = glm::degrees(light->mAngleOuterCone);
 
@@ -226,7 +405,7 @@ std::vector<SpotInfo> LoadSpotLightsFromFBX(const std::string& path)
                 light->mColorSpecular.g,
                 light->mColorSpecular.b);
 
-            // atenuaci�n desde blender, con fallback
+            // atenuación desde blender, con fallback
             s.constant = (light->mAttenuationConstant != 0.0f) ? light->mAttenuationConstant : 1.0f;
             s.linear = (light->mAttenuationLinear != 0.0f) ? light->mAttenuationLinear : 0.09f;
             s.quadratic = (light->mAttenuationQuadratic != 0.0f) ? light->mAttenuationQuadratic : 0.032f;
@@ -275,7 +454,7 @@ int main()
 
     Shader lightingShader("Shader/lighting.vs", "Shader/lighting.frag");
     Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
-    // shader de desintegraci�n:
+    // shader de desintegración:
     Shader disintegrateShader("Shader/disintegrate.vs", "Shader/disintegrate.frag");
 
     // ====== tus modelos ======
@@ -356,6 +535,14 @@ int main()
     Model recepcion((char*)"Models/recepcion.obj");
     Model recepcionista((char*)"Models/recepcionista.obj");
 
+    //Modelo Persona 
+    Model Torso((char*)"Models/Torso.obj");
+    Model Cabeza((char*)"Models/Cabeza.obj");
+    Model Brazo_Izq((char*)"Models/Brazo_Izq.obj");
+    Model Brazo_Der((char*)"Models/Brazo_Der.obj");
+    Model Pierna_Izq((char*)"Models/Pierna_Izq.obj");
+    Model Pierna_Der((char*)"Models/Pierna_Der.obj");
+
     //==========================EXTERIOR=======================
     Model jardin((char*)"Models/jardin.obj");
     Model arboles1((char*)"Models/arboles1.obj");
@@ -383,6 +570,8 @@ int main()
     Model sendero4((char*)"Models/sendero4.obj");
     Model sendero5((char*)"Models/sendero5.obj");
     Model subeybaja((char*)"Models/subeybaja.obj");
+
+    inicializaKeyFrames();
 
     // ===== CARGA DE SPOTS DESDE BLENDER =====
     std::vector<SpotInfo> blenderSpots = LoadSpotLightsFromFBX("Models/spotlights.fbx");
@@ -419,7 +608,7 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        // tiempo desde que explot�
+        // tiempo desde que explotó
         float explodeTime = 0.0f;
         if (explode) {
             explodeTime = currentFrame - explodeStart;
@@ -504,7 +693,7 @@ int main()
             glUniform1f(glGetUniformLocation(lightingShader.Program, (base + ".outerCutOff").c_str()), glm::cos(glm::radians(13.0f)));
         }
 
-        // spotlight de la c�mara (al final)
+        // spotlight de la cámara (al final)
         int camIndex = numSpots;
         if (camIndex < MAX_SPOTS) {
             std::string base = "spotLights[" + std::to_string(camIndex) + "]";
@@ -537,6 +726,10 @@ int main()
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
         glm::mat4 model = glm::mat4(1.0f);
+
+        if (play) {
+            Interpolacion();
+        }
 
         // INTERIOR
         model = glm::mat4(1);
@@ -576,7 +769,7 @@ int main()
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); Pieza2.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); Pieza3.Draw(lightingShader);
 
-        // CUADROS extra (todos los que ya ten�as)
+        // CUADROS extra (todos los que ya tenías)
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); cuadro3.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); cuadro4.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); cuadro5.Draw(lightingShader);
@@ -629,6 +822,43 @@ int main()
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); luminaria16.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); luminaria17.Draw(lightingShader);
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); luminaria18.Draw(lightingShader);
+
+        //========================PERSONA========================= 
+        glm::mat4 modelBase = model;
+        //Traslación y rotación general del personaje (posición global) 
+        model = glm::translate(modelBase, glm::vec3(posX, posY, posZ));
+        model = glm::rotate(model, glm::radians(rotY), glm::vec3(0, 1, 0));
+        model = glm::scale(model, glm::vec3(4.0f)); // Escala global del personaje 
+
+        // === TORSO === (raíz del modelo) 
+        glm::mat4 modelTorso = model;
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTorso));
+        Torso.Draw(lightingShader);
+        // === CABEZA === 
+        glm::mat4 modelCabeza = glm::translate(modelTorso, glm::vec3(0.0f, -0.35f, 0.0f)); // altura cabeza 
+        modelCabeza = glm::rotate(modelCabeza, glm::radians(giroCabeza), glm::vec3(0, 1, 0));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelCabeza));
+        Cabeza.Draw(lightingShader);
+        // === PIERNA IZQUIERDA === 
+        glm::mat4 modelPiernaIzq = glm::translate(modelTorso, glm::vec3(-0.85f, 0.0f, 0.0f)); // posición desde el torso 
+        modelPiernaIzq = glm::rotate(modelPiernaIzq, glm::radians(giroPiernaIzq), glm::vec3(1, 0, 0));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelPiernaIzq));
+        Pierna_Izq.Draw(lightingShader);
+        // === PIERNA DERECHA === 
+        glm::mat4 modelPiernaDer = glm::translate(modelTorso, glm::vec3(0.85f, 0.0f, 0.0f));
+        modelPiernaDer = glm::rotate(modelPiernaDer, glm::radians(giroPiernaDer), glm::vec3(1, 0, 0));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelPiernaDer));
+        Pierna_Der.Draw(lightingShader);
+        // === BRAZO IZQUIERDO === 
+        glm::mat4 modelBrazoIzq = glm::translate(modelTorso, glm::vec3(-0.3f, 0.0f, 0.0f));
+        modelBrazoIzq = glm::rotate(modelBrazoIzq, glm::radians(-giroBrazoIzq), glm::vec3(-1, 0, 0));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelBrazoIzq));
+        Brazo_Izq.Draw(lightingShader);
+        // === BRAZO DERECHO === 
+        glm::mat4 modelBrazoDer = glm::translate(modelTorso, glm::vec3(1.0f, 0.0f, 0.0f));
+        modelBrazoDer = glm::rotate(modelBrazoDer, glm::radians(giroBrazoDer), glm::vec3(-1, 0, 0));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelBrazoDer));
+        Brazo_Der.Draw(lightingShader);
 
         // BANCAS
         model = glm::mat4(1); glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); banca1.Draw(lightingShader);
@@ -745,6 +975,24 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
         }
         else if (action == GLFW_RELEASE)
             keys[key] = false;
+    }
+
+    if (key == GLFW_KEY_P && action == GLFW_PRESS)
+    {
+        play = !play;
+        if (play)
+        {
+            if (i_curr_steps >= i_max_steps)
+            {
+                i_curr_steps = 0;
+                playIndex++;
+                if (playIndex > FrameIndex - 2)
+                {
+                    play = false;
+                }
+            }
+        }
+
     }
 }
 
